@@ -1,38 +1,73 @@
-.App {
-  text-align: center;
+.wrapper {
+    min-height: 100vh;
+    display: flex;
+    font-family: 'Festive', cursive;
+
+}
+@media screen and (max-width: 400px){
+    .wrapper{
+        flex-wrap: wrap;
+    }
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.wrapper.cold{
+    background-color: #93b0d0;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.wrapper.hot{
+    background-color: #c5af7d;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+.content{
+
 }
 
-.App-link {
-  color: #61dafb;
+.leftSide{
+    width: 100vh;
+    display: flex;
+    justify-content: center;
+    margin-top: 30vh;
+}
+.temp{
+    font-family: 'Festive', cursive;
+    font-size: 32px;
+}
+.temp span{
+    font-size: 60px;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.rightSide{
+    width: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.search{
+    text-align: center;
+}
+
+
+
+img{
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+}
+.fomSearch{
+    font-size: 70px;
+}
+
+.fomSearch input{
+    background-color: navajowhite;
+    border-radius: 30px;
+}
+.fomSearch button{
+    border-radius: 30px;
+    background-color: navajowhite;
+}
+
+.errors{
+    font-size: 30px;
+    max-width: 250px;
 }
