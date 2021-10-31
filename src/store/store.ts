@@ -4,9 +4,9 @@ import {DataReducer} from "../State/data.reducer";
 
 
 const RootReducer = combineReducers({
-    Data : DataReducer
+    Data: DataReducer
 })
 
 export type RootReducerType = ReturnType<typeof RootReducer>
 
-export const store = createStore(RootReducer,applyMiddleware(thunk))
+export const store = createStore(RootReducer, applyMiddleware(thunk))

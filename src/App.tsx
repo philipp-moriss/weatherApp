@@ -3,7 +3,7 @@ import './App.css';
 import {useDispatch, useSelector} from "react-redux";
 import {RootReducerType} from "./store/store";
 import {
-    fetchThunkWeatherTC,
+    axsiosThunkWeatherTC,
     StateType,
 } from "./State/data.reducer";
 
@@ -13,14 +13,14 @@ export type tempType = {
     feels_like: number;
     temp_min: number;
     name: string;
-    Error:""
+    Error: ""
 }
 
 function App() {
 
 
     const [value, setValue] = useState('')
-    const Data = useSelector<RootReducerType,StateType>((state)=>state.Data)
+    const Data = useSelector<RootReducerType, StateType>((state) => state.Data)
     const dispatch = useDispatch()
     const onKeyPressHandler = (e: KeyboardEvent<HTMLInputElement>) => {
         if (e.code === "Enter") {
@@ -30,7 +30,7 @@ function App() {
     }
 
     const searchWeatherHandler = (title: string) => {
-        dispatch(fetchThunkWeatherTC(title))
+        dispatch(axsiosThunkWeatherTC(title))
     }
     const temperature = Math.floor(Data.tempMin)
     const temperatureFilsLike = Math.floor(Data.feelsLike)
