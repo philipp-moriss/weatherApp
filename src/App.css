@@ -2,13 +2,10 @@
     min-height: 100vh;
     display: flex;
     font-family: 'Festive', cursive;
+    flex-wrap: wrap;
 
 }
-@media screen and (max-width: 400px){
-    .wrapper{
-        flex-wrap: wrap;
-    }
-}
+
 
 .wrapper.cold{
     background-color: #93b0d0;
