@@ -146,3 +146,22 @@ export const axsiosThunkWeatherTC = (title: string) => (dispatch: Dispatch) => {
         })
 
 }
+
+export const axsiosThunkWeatherGeolocationTC = (latitude: number,longitude : number) => (dispatch: Dispatch) =>{
+    dispatch(updateLoadingAC("loading"))
+    API.searchWeatherByGeolocation(latitude,longitude)
+        .then(({data}) => {
+            const {main,name} = data
+            let {temp_min, feels_like} = main
+            temp_min = Math.floor(temp_min)
+            feels_like = Math.floor(feels_like)
+            dispatch(updateDataAC(temp_min, feels_like, name))
+            dispatch(updateErrorAC(''))
+            dispatch(updateLoadingAC("successes"))
+        })
+        .catch((rej) => {
+            const {message} = rej
+            dispatch(updateErrorAC(message))
+            dispatch(updateLoadingAC("successes"))
+        })
+}

@@ -43,7 +43,10 @@ const API = {
     },
     searchImgBYIcon: (icon: string) => {
         return axiosInstanceforIMG.get<weatherType>(`${icon}@2x.png`)
-    }
+    },
+    searchWeatherByGeolocation: (latitude: number,longitude : number) => {
+        return axiosInstance.get<GetWeatherType>(`weather?lat=${latitude}&units=metric&lon=${longitude}&appid=${key}`)
+    },
 };
 
 

@@ -1,4 +1,4 @@
-import React, {Dispatch, KeyboardEvent, SetStateAction, useState} from "react";
+import React, {Dispatch, KeyboardEvent, SetStateAction, useLayoutEffect, useState} from "react";
 import {StateType} from "../State/data.reducer";
 import Stack from '@mui/material/Stack';
 import LinearProgress from '@mui/material/LinearProgress';
@@ -13,7 +13,7 @@ function Weather(props: WeatherPropsType) {
         </Stack>
 
     return (
-        <div className={`wrapper ${props.Data.tempMin <= 0 ? "cold" : "hot"}`}>
+        <div className={`wrapper ${props.Data.tempMin && props.Data.feelsLike <= 0 ? "cold" : "hot" }`}>
             <div className={"leftSide"}>
                 <div className={"temp"}>
                     <div>temperature now

@@ -1,10 +1,11 @@
-import React, {KeyboardEvent, SetStateAction, Dispatch} from 'react';
+import React, {KeyboardEvent, SetStateAction, Dispatch, useEffect, useLayoutEffect} from 'react';
 import './App.css';
 import {useDispatch, useSelector} from "react-redux";
 import {RootReducerType} from "./store/store";
 import {
+    axsiosThunkWeatherGeolocationTC,
     axsiosThunkWeatherTC,
-    StateType,
+    StateType, updateErrorAC,
 } from "./State/data.reducer";
 import Weather from './components/Wether';
 
@@ -18,6 +19,16 @@ export type tempType = {
 }
 
 function App() {
+    useEffect(()=>{
+        function success(pos:GeolocationPosition) {
+            let crd = pos.coords;
+            dispatch(axsiosThunkWeatherGeolocationTC(crd.latitude,crd.longitude))
+        }
+        function error(err:GeolocationPositionError) {
+            dispatch(updateErrorAC(err.message))
+        }
+        window.navigator.geolocation.getCurrentPosition(success,error)
+    },[])
 
     const Data = useSelector<RootReducerType, StateType>((state) => state.Data)
     const dispatch = useDispatch()
