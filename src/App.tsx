@@ -8,6 +8,7 @@ import {
     StateType, updateErrorAC,
 } from "./State/data.reducer";
 import Weather from './components/Wether';
+import ModalError from "./components/modalWindow/ModalError";
 
 
 export type tempType = {
@@ -43,7 +44,10 @@ function App() {
     }
 
     return (
+        <>
         <Weather Data={Data} searchWeatherHandler={searchWeatherHandler} onKeyPressHandler={onKeyPressHandler}/>
+        {Data.Error && <ModalError Error={Data.Error} />}
+        </>
     );
 }
 

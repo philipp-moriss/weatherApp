@@ -2,6 +2,7 @@ import React, {Dispatch, KeyboardEvent, SetStateAction, useLayoutEffect, useStat
 import {StateType} from "../State/data.reducer";
 import Stack from '@mui/material/Stack';
 import LinearProgress from '@mui/material/LinearProgress';
+import ModalError from "./modalWindow/ModalError";
 
 
 function Weather(props: WeatherPropsType) {
@@ -11,9 +12,8 @@ function Weather(props: WeatherPropsType) {
     const Louder = props.Data.loading === "loading" && <Stack sx={{width: '100%', color: 'grey.500'}} spacing={2}>
             <LinearProgress color="secondary"/>
         </Stack>
-
     return (
-        <div className={`wrapper ${props.Data.tempMin && props.Data.feelsLike <= 0 ? "cold" : "hot" }`}>
+        <div className={`wrapper ${props.Data.tempMin <= 0 && props.Data.feelsLike <= 0  ? "cold" : "hot" }`}>
             <div className={"leftSide"}>
                 <div className={"temp"}>
                     <div>temperature now
@@ -28,17 +28,20 @@ function Weather(props: WeatherPropsType) {
                         {Louder}
                         <input
                             value={value}
-                            onKeyPress={(e) => props.onKeyPressHandler(e, setValue)}
+                            onKeyPress={(e) => {
+                                props.onKeyPressHandler(e, setValue)
+                            }}
                             onChange={(e) => setValue(e.currentTarget.value)}
                             disabled={props.Data.loading === "loading"}
                         />
                         <button
-                            onClick={() => props.searchWeatherHandler(value)}
+                            onClick={() => {
+                                props.searchWeatherHandler(value)
+                            }}
                             disabled={props.Data.loading === "loading"}
                         >search</button>
                     </div>
                     <div className={"errors"}>
-                        <div>{props.Data.Error}</div>
                         <span>{props.Data.name}</span></div>
                 </div>
             </div>
