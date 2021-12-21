@@ -31,6 +31,7 @@ function Weather(props: WeatherPropsType) {
                             onKeyPress={(e) => {
                                 props.onKeyPressHandler(e, setValue)
                             }}
+                            placeholder={"Enter country"}
                             onChange={(e) => setValue(e.currentTarget.value)}
                             disabled={props.Data.loading === "loading"}
                         />

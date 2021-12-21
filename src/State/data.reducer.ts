@@ -1,5 +1,6 @@
 import {Dispatch} from "redux";
 import API from "../API";
+import sun from '../assets/pngwing.com.png'
 
 export type StateType = {
 
@@ -110,7 +111,7 @@ export const axsiosThunkWeatherTC = (title: string) => (dispatch: Dispatch) => {
             const {icon} = resp[0]
             switch (icon) {
                 case '01d':{
-                    dispatch(updateImgAC("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQBLtPVHNeIipOAc238W5jjjFM9IFPjVbTscQ&usqp=CAU"))
+                    dispatch(updateImgAC(sun))
                     dispatch(updateLoadingAC("successes"))
                     break
                 }

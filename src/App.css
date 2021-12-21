@@ -1,8 +1,15 @@
 .wrapper {
     min-height: 100vh;
     display: flex;
-    font-family: 'Festive', cursive;
-    flex-wrap: wrap;
+    font-family: 'Bauhaus 93', cursive;
+}
+
+@media screen and (max-width: 679px ){
+    .wrapper{
+        flex-wrap: wrap;
+        flex-direction: column-reverse;
+        justify-content: space-around;
+    }
 }
 
 
@@ -19,21 +26,21 @@
 }
 
 .leftSide{
-    width: 100vh;
+    width: 100%;
     display: flex;
     justify-content: center;
-    margin-top: 30vh;
+    align-items: center;
 }
 .temp{
-    font-family: 'Festive', cursive;
-    font-size: 32px;
+    font-size: 30px;
+    font-family: 'Bauhaus 93', cursive;
 }
 .temp span{
-    font-size: 60px;
+    font-size: 30px;
 }
 
 .rightSide{
-    width: 100vh;
+    width: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -51,16 +58,22 @@ img{
     border-radius: 50%;
 }
 .fomSearch{
-    font-size: 70px;
 }
 
 .fomSearch input{
+    padding: 7px;
     background-color: navajowhite;
     border-radius: 30px;
+    margin-right: 10px;
+    box-sizing: border-box;
+    font-family: 'Bauhaus 93', cursive;
 }
 .fomSearch button{
+    padding: 7px;
     border-radius: 30px;
     background-color: navajowhite;
+    font-family: 'Bauhaus 93', cursive;
+    cursor: pointer;
 }
 
 .errors{

@@ -2,7 +2,6 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
-import {useEffect} from "react";
 import {useDispatch} from "react-redux";
 import {updateErrorAC} from "../../State/data.reducer";
 
