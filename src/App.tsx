@@ -1,14 +1,11 @@
-import React, {KeyboardEvent, SetStateAction, Dispatch, useEffect, useLayoutEffect} from 'react';
+import React, {Dispatch, KeyboardEvent, SetStateAction, useEffect} from 'react';
 import './App.css';
 import {useDispatch, useSelector} from "react-redux";
-import {RootReducerType} from "./store/store";
-import {
-    axsiosThunkWeatherGeolocationTC,
-    axsiosThunkWeatherTC,
-    StateType, updateErrorAC,
-} from "./State/data.reducer";
+
 import Weather from './components/Wether';
 import ModalError from "./components/modalWindow/ModalError";
+import {axsiosThunkWeatherGeolocationTC, axsiosThunkWeatherTC, ErrorAc, StateType} from './State/dataTool.reducer';
+import {RootState} from "./store/storeTool";
 
 
 export type tempType = {
@@ -23,15 +20,15 @@ function App() {
     useEffect(()=>{
         function success(pos:GeolocationPosition) {
             let crd = pos.coords;
-            dispatch(axsiosThunkWeatherGeolocationTC(crd.latitude,crd.longitude))
+            dispatch(axsiosThunkWeatherGeolocationTC({longitude:crd.longitude, latitude: crd.latitude}))
         }
         function error(err:GeolocationPositionError) {
-            dispatch(updateErrorAC(err.message))
+            dispatch(ErrorAc({Error: err.message}))
         }
         window.navigator.geolocation.getCurrentPosition(success,error)
     },[])
 
-    const Data = useSelector<RootReducerType, StateType>((state) => state.Data)
+    const Data = useSelector<RootState, StateType>((state) => state.Data)
     const dispatch = useDispatch()
     const onKeyPressHandler = (e: KeyboardEvent<HTMLInputElement>,setValue: Dispatch<SetStateAction<string>>) => {
         if (e.code === "Enter") {

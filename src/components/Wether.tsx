@@ -1,8 +1,8 @@
-import React, {Dispatch, KeyboardEvent, SetStateAction, useLayoutEffect, useState} from "react";
-import {StateType} from "../State/data.reducer";
+import React, {Dispatch, KeyboardEvent, SetStateAction, useState} from "react";
+
 import Stack from '@mui/material/Stack';
 import LinearProgress from '@mui/material/LinearProgress';
-import ModalError from "./modalWindow/ModalError";
+import { StateType } from "../State/dataTool.reducer";
 
 
 function Weather(props: WeatherPropsType) {

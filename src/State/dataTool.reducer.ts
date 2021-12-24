@@ -1,6 +1,9 @@
-import {Dispatch} from "redux";
+import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
+import {PayloadAction} from "@reduxjs/toolkit/dist/createAction";
 import API from "../API";
-import sun from '../assets/pngwing.com.png'
+import sun from "../assets/pngwing.com.png";
+import {AppDispatch, RootState} from "../store/storeTool";
+
 
 export type StateType = {
 
@@ -14,13 +17,6 @@ export type StateType = {
 
 type LoadingType = "loading" | "successes"
 
-export type ActionType =
-    UpdateDataACType
-    | UpdateErrorACType
-    | UpdateDataNameACType
-    | UpdateImgACType
-    | UpdateLoadingACType
-
 
 const initialState: StateType = {
     tempMin: 0,
@@ -32,137 +28,107 @@ const initialState: StateType = {
 }
 
 
-export const DataReducer = (state = initialState, action: ActionType): StateType => {
-    switch (action.type) {
-        case "UPDATE-DATA": {
-            return {...state, ...action}
+export const slice = createSlice({
+    name: 'DataSlice',
+    initialState: initialState,
+    reducers: {
+        updateData: (state: StateType, action: PayloadAction<{ tempMin: number, feelsLike: number, name: string }>) => {
+            console.log(action.payload)
+            state.tempMin = action.payload.tempMin
+            state.feelsLike = action.payload.feelsLike
+            state.name = action.payload.name
+        },
+        Error: (state: StateType, action: PayloadAction<{ Error: string }>) => {
+            state.Error = action.payload.Error
+        },
+        updateImgAC: (state: StateType, action: PayloadAction<{ img: string }>) => {
+            state.img = action.payload.img
+        },
+        updateDataNameAC: (state: StateType, action: PayloadAction<{ name: string }>) => {
+            state.name = action.payload.name
+        },
+        updateLoadingAC: (state: StateType, action: PayloadAction<{ loading: LoadingType }>) => {
+            state.loading = action.payload.loading
         }
-        case "UPDATE-ERROR":
-        case "UPDATE-NAME":
-        case "UPDATE-LOADING":
-        case "UPDATE-IMG": {
-            return {...state, ...action.payload}
-        }
-        default: {
-            return state
-        }
+    },
+})
+
+export const updateDataAc = slice.actions.updateData
+export const ErrorAc = slice.actions.Error
+export const updateImgAC = slice.actions.updateImgAC
+export const updateLoadingAC = slice.actions.updateLoadingAC
+export const updateDataNameAC = slice.actions.updateDataNameAC
+export const DataReduser = slice.reducer
+
+
+export const axsiosThunkWeatherTC = createAsyncThunk<any, string, {
+    rejectValue: {
+        cod: string,
+        message: string
     }
-}
-
-export type UpdateDataACType = ReturnType<typeof updateDataAC>
-export const updateDataAC = (tempMin: number, feelsLike: number, name: string,) => {
-    return {
-        type: "UPDATE-DATA",
-        tempMin,
-        feelsLike,
-        name
-    } as const
-}
-
-export type UpdateDataNameACType = ReturnType<typeof updateDataNameAC>
-export const updateDataNameAC = (name: string) => {
-    return {
-        type: "UPDATE-NAME",
-        payload: {name}
-    } as const
-}
-
-
-export type UpdateErrorACType = ReturnType<typeof updateErrorAC>
-export const updateErrorAC = (Error: string) => {
-    return {
-        type: "UPDATE-ERROR",
-        payload: {Error},
-    } as const
-}
-
-
-export type UpdateImgACType = ReturnType<typeof updateImgAC>
-export const updateImgAC = (img: string) => {
-    return {
-        type: "UPDATE-IMG",
-        payload: {img},
-    } as const
-}
-
-
-export type UpdateLoadingACType = ReturnType<typeof updateLoadingAC>
-export const updateLoadingAC = (loading: LoadingType) => {
-    return {
-        type: "UPDATE-LOADING",
-        payload: {loading},
-    } as const
-}
-
-
-export const axsiosThunkWeatherTC = (title: string) => (dispatch: Dispatch) => {
-    dispatch(updateLoadingAC("loading"))
-    API.searchWeatherByCiti(title)
-        .then(({data}) => {
-            const {main, weather, name} = data
-            let {temp_min, feels_like} = main
-            temp_min = Math.floor(temp_min)
-            feels_like = Math.floor(feels_like)
-            dispatch(updateDataAC(temp_min, feels_like, name))
-            dispatch(updateErrorAC(''))
-            return weather
-        })
-        .then((resp) => {
-            const {icon} = resp[0]
-            switch (icon) {
-                case '01d':{
-                    dispatch(updateImgAC(sun))
-                    dispatch(updateLoadingAC("successes"))
-                    break
-                }
-                case '04d': {
-                    dispatch(updateImgAC("https://st4.depositphotos.com/38837296/39705/v/450/depositphotos_397057922-stock-illustration-weather-icon-vector-weather-concept.jpg"))
-                    dispatch(updateLoadingAC("successes"))
-                    break
-                }
-                case '03n': {
-                    dispatch(updateImgAC("https://icon-library.com/images/partly-cloudy-weather-icon/partly-cloudy-weather-icon-24.jpg"))
-                    dispatch(updateLoadingAC("successes"))
-                    break
-                }
-                default: {
-                    API.searchImgBYIcon(icon)
-                        .then(resp => {
-                            const img = resp.request.responseURL
-                            dispatch(updateImgAC(img))
-                            dispatch(updateLoadingAC("successes"))
-                        })
-                        .catch(rej => {
-                            dispatch(updateDataNameAC(''))
-                            dispatch(updateErrorAC(rej))
-                            dispatch(updateLoadingAC("successes"))
-                        })
+}>('thunk', async (title, thunkApi) => {
+    thunkApi.dispatch(updateLoadingAC({loading: "loading"}))
+    try {
+        let result = await API.searchWeatherByCiti(title)
+        const {main, weather, name} = result.data
+        let {temp_min, feels_like} = main
+        temp_min = Math.floor(temp_min)
+        feels_like = Math.floor(feels_like)
+        thunkApi.dispatch(slice.actions.updateData({tempMin: temp_min, feelsLike: feels_like, name: name}))
+        thunkApi.dispatch(ErrorAc({Error: ''}))
+        const {icon} = weather[0]
+        switch (icon) {
+            case '01d': {
+                thunkApi.dispatch(updateImgAC({img: sun}))
+                break
+            }
+            case '04d': {
+                thunkApi.dispatch(updateImgAC({img: "https://st4.depositphotos.com/38837296/39705/v/450/depositphotos_397057922-stock-illustration-weather-icon-vector-weather-concept.jpg"}))
+                break
+            }
+            case '03n': {
+                thunkApi.dispatch(updateImgAC({img: "https://icon-library.com/images/partly-cloudy-weather-icon/partly-cloudy-weather-icon-24.jpg"}))
+                break
+            }
+            default: {
+                try {
+                    let resp = await API.searchImgBYIcon(icon)
+                    const img = resp.request.responseURL
+                    thunkApi.dispatch(updateImgAC({img: img}))
+                } catch (e: any) {
+                    thunkApi.dispatch(updateDataNameAC({name: ''}))
+                    thunkApi.dispatch(ErrorAc({Error: e.message}))
                 }
             }
-        })
-        .catch((rej) => {
-            const {message} = rej
-            dispatch(updateErrorAC(message))
-            dispatch(updateLoadingAC("successes"))
-        })
+        }
+    } catch (e: any) {
+        thunkApi.dispatch(thunkApi.dispatch(ErrorAc({Error: e.message})))
+    } finally {
+        thunkApi.dispatch(updateLoadingAC({loading: "successes"}))
+    }
+})
 
-}
 
-export const axsiosThunkWeatherGeolocationTC = (latitude: number,longitude : number) => (dispatch: Dispatch) =>{
-    dispatch(updateLoadingAC("loading"))
-    API.searchWeatherByGeolocation(latitude,longitude)
-        .then(({data}) => {
-            const {main,name} = data
-            let {temp_min, feels_like} = main
-            temp_min = Math.floor(temp_min)
-            feels_like = Math.floor(feels_like)
-            dispatch(updateDataAC(temp_min, feels_like, name))
-            dispatch(updateErrorAC(''))
-            dispatch(updateLoadingAC("successes"))
-        })
-        .catch((rej) => {
-            const {message} = rej
-            dispatch(updateErrorAC(message))
-            dispatch(updateLoadingAC("successes"))
-        })
-}
+export const axsiosThunkWeatherGeolocationTC = createAsyncThunk<// Return type of the payload creator
+    any,
+    { latitude: number, longitude: number },
+    {
+        dispatch: AppDispatch
+        state: RootState
+    }>('thunkGeo', async ({latitude, longitude}, thunkApi) => {
+    thunkApi.dispatch(updateLoadingAC({loading: "loading"}))
+    try {
+        let result = await API.searchWeatherByGeolocation(latitude, longitude)
+        const {main, name} = result.data
+        let {temp_min, feels_like} = main
+        temp_min = Math.floor(temp_min)
+        feels_like = Math.floor(feels_like)
+        thunkApi.dispatch(updateDataAc({tempMin: temp_min, feelsLike: feels_like, name: name}))
+        thunkApi.dispatch(ErrorAc({Error: ''}))
+    }catch (e: any) {
+        thunkApi.dispatch(ErrorAc(e.message))
+    } finally {
+        thunkApi.dispatch(updateLoadingAC({loading: "successes"}))
+    }
+})
+

@@ -3,7 +3,7 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import {useDispatch} from "react-redux";
-import {updateErrorAC} from "../../State/data.reducer";
+import {ErrorAc} from "../../State/dataTool.reducer";
 
 const style = {
     position: 'absolute' as 'absolute',
@@ -26,7 +26,7 @@ type ModalError = {
 export default function ModalError( props: ModalError ) {
     const dispatch = useDispatch()
     const handleClose = () => {
-        dispatch(updateErrorAC(''))
+        dispatch(ErrorAc({Error: ''}))
     };
 
     return (
